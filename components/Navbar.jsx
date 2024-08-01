@@ -1,5 +1,5 @@
 "use client";
-import { getProviders, signIn, useSession } from "next-auth/react";
+import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,6 +10,7 @@ import profileDefault from "../assets/images/profile.png";
 
 const Navbar = () => {
   const { data: session } = useSession();
+  const profileImage = session?.user?.image || profileDefault;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [providers, setProviders] = useState(null);
@@ -168,8 +169,10 @@ const Navbar = () => {
                     <span className="sr-only">Open user menu</span>
                     <Image
                       className="h-8 w-8 rounded-full"
-                      src={profileDefault}
+                      src={profileImage}
                       alt=""
+                      width={40}
+                      height={40}
                     />
                   </button>
                 </div>
@@ -185,6 +188,7 @@ const Navbar = () => {
                     tabIndex="-1"
                   >
                     <Link
+                      onClick={() => setIsProfileMenuOpen(false)}
                       href="/properties/profile"
                       className="block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"
@@ -194,6 +198,7 @@ const Navbar = () => {
                       Your Profile
                     </Link>
                     <Link
+                      onClick={() => setIsProfileMenuOpen(false)}
                       href="/properties/saved"
                       className="block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"
@@ -203,6 +208,10 @@ const Navbar = () => {
                       Saved Properties
                     </Link>
                     <Link
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        signOut();
+                      }}
                       href="/"
                       className="block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"

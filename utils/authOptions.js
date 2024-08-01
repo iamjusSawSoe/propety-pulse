@@ -17,14 +17,14 @@ export const authOptions = {
       },
     }),
   ],
-  callback: {
+  callbacks: {
     // Invoked on sucessful signin
     async signIn({ profile }) {
       // 1. Connect to database
       await connectDB();
       // 2. Check if user exists in database
       const userExists = await User.findOne({ email: profile.email });
-
+      console.log(userExists);
       // 3. If not, create user in database
       if (!userExists) {
         // Truncate user name if too long
